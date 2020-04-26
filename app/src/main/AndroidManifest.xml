@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.xfhy.weather">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:name=".SunnyWeatherApplication"
         android:allowBackup="true"

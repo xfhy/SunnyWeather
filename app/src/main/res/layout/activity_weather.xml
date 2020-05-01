@@ -24,10 +24,13 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <!--当前天气-->
                 <include layout="@layout/now" />
 
+                <!--未来几天预报-->
                 <include layout="@layout/forecast" />
 
+                <!--生活指数-->
                 <include layout="@layout/life_index" />
 
             </LinearLayout>

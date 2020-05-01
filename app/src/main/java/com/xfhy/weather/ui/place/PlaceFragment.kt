@@ -77,7 +77,7 @@ class PlaceFragment : Fragment() {
     private fun goWeatherDetailIfSaved(): Boolean {
         if (viewModel.isPlaceSaved()) {
             val place = viewModel.getSavedPlace()
-            if(activity is MainActivity) {
+            if (activity is MainActivity) {
                 WeatherActivity.startWeatherActivity(context, place.location.lng, place.location.lat, place.name)
                 activity?.finish()
                 return true

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.xfhy.weather.R
 import com.xfhy.weather.logic.model.Place
 import com.xfhy.weather.ui.weather.WeatherActivity
+import kotlinx.android.synthetic.main.activity_weather.*
 
 /**
  * @author : xfhy
@@ -26,10 +27,20 @@ class PlaceAdapter(private val fragment: PlaceFragment, private val placeList: L
         viewHolder.itemView.setOnClickListener {
             val position = viewHolder.adapterPosition
             val place = placeList[position]
+
+            val activity = fragment.activity
+            if (activity is WeatherActivity) {
+                activity.drawerLayout.closeDrawers()
+                activity.viewModel.locationLng = place.location.lng
+                activity.viewModel.locationLat = place.location.lat
+                activity.viewModel.placeName = place.name
+                activity.refreshWeather()
+            } else {
+                WeatherActivity.startWeatherActivity(fragment.context, place.location.lng, place.location.lat, place.name)
+                fragment.activity?.finish()
+            }
             //保存天气信息
             fragment.viewModel.savePlace(place)
-            WeatherActivity.startWeatherActivity(fragment.context, place.location.lng, place.location.lat, place.name)
-            //fragment.activity?.finish()
         }
         return viewHolder
     }

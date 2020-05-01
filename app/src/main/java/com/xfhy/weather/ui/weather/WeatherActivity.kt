@@ -8,8 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -27,7 +30,7 @@ import java.util.*
 /**
  * 天气详情页
  */
-class WeatherActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
+class WeatherActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     companion object {
         const val LOCATION_LNG_KEY = "location_lng"
@@ -45,7 +48,7 @@ class WeatherActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListene
 
     }
 
-    private val viewModel by lazy { ViewModelProviders.of(this).get(WeatherViewModel::class.java) }
+    val viewModel by lazy { ViewModelProviders.of(this).get(WeatherViewModel::class.java) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +65,25 @@ class WeatherActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListene
     private fun initView() {
         swipeRefresh.setOnRefreshListener(this)
         swipeRefresh.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary)
+        swipeRefresh.isRefreshing = true
+
+        navBtn.setOnClickListener(this)
+        drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
+            override fun onDrawerStateChanged(newState: Int) {
+            }
+
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+            }
+
+            override fun onDrawerClosed(drawerView: View) {
+                //关闭软键盘
+                val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(drawerView.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+            }
+
+            override fun onDrawerOpened(drawerView: View) {
+            }
+        })
     }
 
     private fun initIntent() {
@@ -140,7 +162,30 @@ class WeatherActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListene
     }
 
     override fun onRefresh() {
+        refreshWeather()
+    }
+
+    fun refreshWeather() {
         viewModel.refreshWeather(viewModel.locationLng, viewModel.locationLat)
+    }
+
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.navBtn -> {
+                drawerLayout.openDrawer(GravityCompat.START)
+            }
+            else -> {
+            }
+        }
+    }
+
+    override fun onBackPressed() {
+        //如果左边抽屉在展示  则按back键先把抽屉收起来
+        if (drawerLayout.isDrawerVisible(GravityCompat.START)) {
+            drawerLayout.closeDrawers()
+        } else {
+            super.onBackPressed()
+        }
     }
 
 }

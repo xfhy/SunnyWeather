@@ -1,6 +1,7 @@
 package com.xfhy.weather.logic
 
 import androidx.lifecycle.liveData
+import com.xfhy.weather.logic.dao.PlaceDao
 import com.xfhy.weather.logic.model.Place
 import com.xfhy.weather.logic.model.Weather
 import com.xfhy.weather.logic.network.SunnyWeatherNetwork
@@ -79,5 +80,21 @@ object Repository {
         emit(result)
     }
 
+    /**
+     * 将place对象序列化成json然后保存到SP
+     */
+    fun savePlace(place: Place) {
+        PlaceDao.sacePlace(place)
+    }
+
+    /**
+     * 从sp中获取Place(天气)数据
+     */
+    fun getSavePlace() = PlaceDao.getSavedPlace()
+
+    /**
+     * 之前是否有保存天气数据到本地?
+     */
+    fun isPlaceSaved() = PlaceDao.isPlaceSaved()
 
 }

@@ -1,5 +1,7 @@
 package com.xfhy.weather.ui.weather
 
+import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +27,22 @@ import java.util.*
  * 天气详情页
  */
 class WeatherActivity : AppCompatActivity() {
+
+    companion object {
+        const val LOCATION_LNG_KEY = "location_lng"
+        const val LOCATION_LAT_KEY = "location_lat"
+        const val PLACE_NAME_KEY = "place_name"
+
+        fun startWeatherActivity(context: Context?, lng: String, lat: String, placeName: String) {
+            val intent = Intent(context, WeatherActivity::class.java).apply {
+                putExtra(LOCATION_LNG_KEY, lng)
+                putExtra(LOCATION_LAT_KEY, lat)
+                putExtra(PLACE_NAME_KEY, placeName)
+            }
+            context?.startActivity(intent)
+        }
+
+    }
 
     private val viewModel by lazy { ViewModelProviders.of(this).get(WeatherViewModel::class.java) }
 
@@ -56,7 +74,6 @@ class WeatherActivity : AppCompatActivity() {
                 result.exceptionOrNull()?.printStackTrace()
             } else {
                 showWeatherInfo(weather)
-
             }
         })
         viewModel.refreshWeather(viewModel.locationLng, viewModel.locationLat)
@@ -104,13 +121,13 @@ class WeatherActivity : AppCompatActivity() {
 
     private fun initIntent() {
         if (viewModel.locationLng.isEmpty()) {
-            viewModel.locationLng = intent.getStringExtra("location_lng") ?: ""
+            viewModel.locationLng = intent.getStringExtra(LOCATION_LNG_KEY) ?: ""
         }
         if (viewModel.locationLat.isEmpty()) {
-            viewModel.locationLat = intent.getStringExtra("location_lat") ?: ""
+            viewModel.locationLat = intent.getStringExtra(LOCATION_LAT_KEY) ?: ""
         }
         if (viewModel.placeName.isEmpty()) {
-            viewModel.placeName = intent.getStringExtra("place_name") ?: ""
+            viewModel.placeName = intent.getStringExtra(PLACE_NAME_KEY) ?: ""
         }
     }
 }

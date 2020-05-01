@@ -11,7 +11,7 @@ import com.xfhy.weather.logic.model.Place
  * Create time : 2020-04-26 23:43
  * Description : 搜索
  */
-class PlaceViewModel :ViewModel(){
+class PlaceViewModel : ViewModel() {
 
     private val searchLiveData = MutableLiveData<String>()
 
@@ -19,7 +19,7 @@ class PlaceViewModel :ViewModel(){
      * 对于界面上显示的城市数据进行缓存
      */
     val placeList = ArrayList<Place>()
-                                                    //Transformations.switchMap 观察searchLiveData这个LiveData对象
+    //Transformations.switchMap 观察searchLiveData这个LiveData对象
     val placeLiveData = Transformations.switchMap(searchLiveData) { query ->
         Repository.searchPlaces(query)
     }
@@ -31,5 +31,13 @@ class PlaceViewModel :ViewModel(){
         //将搜索关键词传入,更新LiveData->更新上面的Transformations.switchMap(searchLiveData) 然后进行网络请求,更新了placeLiveData这个LiveData
         searchLiveData.value = query
     }
+
+    fun savePlace(place: Place) {
+        Repository.savePlace(place)
+    }
+
+    fun getSavedPlace() = Repository.getSavePlace()
+
+    fun isPlaceSaved() = Repository.isPlaceSaved()
 
 }

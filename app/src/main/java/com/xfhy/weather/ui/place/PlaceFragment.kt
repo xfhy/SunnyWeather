@@ -9,14 +9,20 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.xfhy.weather.MainActivity
 import com.xfhy.weather.R
 import com.xfhy.weather.ui.common.toast
+import com.xfhy.weather.ui.weather.WeatherActivity
 import kotlinx.android.synthetic.main.fragment_place.*
 
 /**
  * @author : xfhy
  * Create time : 2020-04-27 22:15
  * Description : 搜索界面
+ *
+ * 该fragment在MainActivity用于搜索
+ * 也在天气详情页WeatherActivity中使用到
+ *
  */
 class PlaceFragment : Fragment() {
 
@@ -29,6 +35,10 @@ class PlaceFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        if (goWeatherDetailIfSaved()) {
+            return
+        }
 
         val layoutManager = LinearLayoutManager(activity)
         recyclerView.layoutManager = layoutManager
@@ -62,6 +72,18 @@ class PlaceFragment : Fragment() {
                 bgImageView.visibility = View.GONE
             }
         })
+    }
+
+    private fun goWeatherDetailIfSaved(): Boolean {
+        if (viewModel.isPlaceSaved()) {
+            val place = viewModel.getSavedPlace()
+            if(activity is MainActivity) {
+                WeatherActivity.startWeatherActivity(context, place.location.lng, place.location.lat, place.name)
+                activity?.finish()
+                return true
+            }
+        }
+        return false
     }
 
 }

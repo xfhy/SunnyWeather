@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!--主页面 支持刷新-->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
@@ -35,6 +36,7 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+    <!--抽屉-->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.xfhy.weather.R
 import com.xfhy.weather.logic.model.Weather
 import com.xfhy.weather.logic.model.getSky
@@ -26,7 +27,7 @@ import java.util.*
 /**
  * 天气详情页
  */
-class WeatherActivity : AppCompatActivity() {
+class WeatherActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
     companion object {
         const val LOCATION_LNG_KEY = "location_lng"
@@ -53,8 +54,26 @@ class WeatherActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_weather)
 
+        initView()
         initIntent()
         initData()
+    }
+
+    private fun initView() {
+        swipeRefresh.setOnRefreshListener(this)
+        swipeRefresh.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary)
+    }
+
+    private fun initIntent() {
+        if (viewModel.locationLng.isEmpty()) {
+            viewModel.locationLng = intent.getStringExtra(LOCATION_LNG_KEY) ?: ""
+        }
+        if (viewModel.locationLat.isEmpty()) {
+            viewModel.locationLat = intent.getStringExtra(LOCATION_LAT_KEY) ?: ""
+        }
+        if (viewModel.placeName.isEmpty()) {
+            viewModel.placeName = intent.getStringExtra(PLACE_NAME_KEY) ?: ""
+        }
     }
 
     private fun initStatusBar() {
@@ -75,6 +94,7 @@ class WeatherActivity : AppCompatActivity() {
             } else {
                 showWeatherInfo(weather)
             }
+            swipeRefresh.isRefreshing = false
         })
         viewModel.refreshWeather(viewModel.locationLng, viewModel.locationLat)
     }
@@ -119,15 +139,8 @@ class WeatherActivity : AppCompatActivity() {
         weatherLayout.visibility = View.VISIBLE
     }
 
-    private fun initIntent() {
-        if (viewModel.locationLng.isEmpty()) {
-            viewModel.locationLng = intent.getStringExtra(LOCATION_LNG_KEY) ?: ""
-        }
-        if (viewModel.locationLat.isEmpty()) {
-            viewModel.locationLat = intent.getStringExtra(LOCATION_LAT_KEY) ?: ""
-        }
-        if (viewModel.placeName.isEmpty()) {
-            viewModel.placeName = intent.getStringExtra(PLACE_NAME_KEY) ?: ""
-        }
+    override fun onRefresh() {
+        viewModel.refreshWeather(viewModel.locationLng, viewModel.locationLat)
     }
+
 }

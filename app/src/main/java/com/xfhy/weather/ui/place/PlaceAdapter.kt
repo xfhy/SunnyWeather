@@ -1,5 +1,6 @@
 package com.xfhy.weather.ui.place
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.xfhy.weather.R
 import com.xfhy.weather.logic.model.Place
+import com.xfhy.weather.ui.weather.WeatherActivity
 
 /**
  * @author : xfhy
@@ -22,7 +24,18 @@ class PlaceAdapter(private val fragment: Fragment, private val placeList: List<P
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(fragment.context).inflate(R.layout.place_item, parent, false)
-        return ViewHolder(view)
+        val viewHolder = ViewHolder(view)
+        viewHolder.itemView.setOnClickListener {
+            val position = viewHolder.adapterPosition
+            val place = placeList[position]
+            val intent = Intent(parent.context, WeatherActivity::class.java).apply {
+                putExtra("location_lng", place.location.lng)
+                putExtra("location_lat", place.location.lat)
+                putExtra("place_name", place.name)
+            }
+            fragment.startActivity(intent)
+        }
+        return viewHolder
     }
 
     override fun getItemCount(): Int = placeList.size

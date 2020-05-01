@@ -19,9 +19,15 @@ object SunnyWeatherNetwork {
     private val placeService = ServiceCreator.create<PlaceService>()
     //private val placeService = ServiceCreator.create(PlaceService::class.java)
 
+    private val weatherService = ServiceCreator.create<WeatherService>()
+
     //首先通过placeService.searchPlaces获取Call对象,然后调用扩展了Call的await方法,进行网络请求
     //当外部调用searchPlaces方法时,Retrofit会立即发起网络请求,同时当前协程会被阻塞住.直到服务器响应请求,await函数会将解析出来的数据模型对象取出并返回,同时恢复协程
     suspend fun searchPlaces(query: String) = placeService.searchPlaces(query).await()
+
+    suspend fun getDailyWeather(lng: String, lat: String) = weatherService.getDailyWeather(lng, lat).await()
+
+    suspend fun getRealtimeWeather(lng: String, lat: String) = weatherService.getRealtimeWeather(lng, lat).await()
 
     /**
      * 扩展Retrofit的Call  让其拥有await方法
@@ -47,5 +53,6 @@ object SunnyWeatherNetwork {
             })
         }
     }
+
 
 }

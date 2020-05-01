@@ -1,5 +1,6 @@
 package com.xfhy.weather.ui.common
 
+import android.app.Activity
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 
@@ -13,4 +14,8 @@ fun Fragment.toast(text: String) {
     context?.let {
         Toast.makeText(it, text, Toast.LENGTH_SHORT).show()
     }
+}
+
+fun Activity.toast(text: String) {
+    Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
 }
